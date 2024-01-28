@@ -1,3 +1,5 @@
+pub mod errors;
+pub use errors::SpacyDBError;
 use std::sync::Arc;
 
 use sqlx::{postgres::PgPoolOptions, PgPool};
@@ -11,12 +13,13 @@ impl DB {
         Self { pool }
     }
 
-    pub async fn check(&self) -> Result<(i64,), sqlx::Error> {
+    pub async fn check(&self) -> Result<(i64,), SpacyDBError> {
         let value = 150_i64;
         let row: (i64,) = sqlx::query_as("SELECT $1")
             .bind(value)
             .fetch_one(&*self.pool)
-            .await?;
+            .await
+            .map_err(|e| SpacyDBError::new(format!("{}", e)))?;
 
         assert_eq!(row.0, value);
         Ok(row)
