@@ -1,0 +1,20 @@
+version: "3.3"
+
+services:
+  app:
+    image: comments
+    build:
+      target: dev
+      context: .
+    volumes:
+      - .:/home/runner/app
+      - /home/runner/app/target
+
+  db:
+    image: postgres:latest
+    environment:
+      - POSTGRES_DB=app
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=pass
+    volumes:
+      - ./db-data:/var/lib/postgresql/data
