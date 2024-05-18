@@ -4,8 +4,9 @@ use std::sync::Arc;
 use uuid::Uuid;
 
 use sqlx::{
+    pool::PoolConnection,
     postgres::{PgPoolOptions, PgRow},
-    FromRow, PgPool,
+    FromRow, PgPool
 };
 
 pub struct DB {
@@ -65,8 +66,12 @@ impl DB {
             .map_err(|e| SpacyDBError::new(format!("{}", e)))?;
 
         rows.iter()
-            .map(|r| T::from_row(&r).map_err(|e| SpacyDBError::new(format!("{}", e))))
+            .map(|r| T::from_row(r).map_err(|e| SpacyDBError::new(format!("{}", e))))
             .collect()
+    }
+
+    pub fn get_db_connection(&self) -> Option<PoolConnection<sqlx::Postgres>> {
+        self.pool.try_acquire()
     }
 }
 
@@ -103,11 +108,18 @@ mod tests {
         let db = get_db_connection(database_url).await;
         sqlx::migrate!().run(&*db.pool).await.unwrap();
 
-        let skus = db
-            .fetch_all::<SKU>("SELECT * from sku WHERE quantity > $1".to_owned(), 1)
+        let skus: Vec<SKU> = db
+            .fetch_all("SELECT * from sku WHERE quantity > $1".to_owned(), 1)
             .await
             .unwrap();
         assert_eq!(skus.len(), 1);
         assert_eq!(skus[0].quantity, 3)
+    }
+
+    #[tokio::test]
+    async fn test_get_db_connection_from_pool() {
+        let database_url = "postgres://postgres:pass@db/app".to_owned();
+        let db = get_db_connection(database_url).await;
+        db.get_db_connection();
     }
 }

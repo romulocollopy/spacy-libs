@@ -4,4 +4,4 @@ members = [
     "spacy-postgres",
     "spacy-conf",
 ]
-
+resolver = "2"
