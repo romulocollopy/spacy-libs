@@ -1,0 +1,11 @@
+[package]
+name = "spacy-macros"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+proc-macro2 = { version = "1.0.86", features = ["proc-macro"] }
+spacy_macros_derive = { path = "./spacy-macros_derive" }
+uuid = { version = "1.10.0", features = ["serde", "v4"] }

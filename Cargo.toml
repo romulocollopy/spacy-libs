@@ -3,5 +3,6 @@
 members = [
     "spacy-postgres",
     "spacy-conf",
+    "spacy-macros",
 ]
 resolver = "2"
