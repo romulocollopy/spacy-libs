@@ -8,4 +8,6 @@ edition = "2021"
 [dependencies]
 proc-macro2 = { version = "1.0.86", features = ["proc-macro"] }
 spacy_macros_derive = { path = "./spacy-macros_derive" }
+
+[dev-dependencies]
 uuid = { version = "1.10.0", features = ["serde", "v4"] }
