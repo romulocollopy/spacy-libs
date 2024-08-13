@@ -13,4 +13,6 @@ fn it_works() {
     if let Some(u) = p.uuid {
         println!("{}", u);
     }
+
+    let _ = p.clone();
 }

@@ -46,9 +46,13 @@ pub fn add_uuid(_args: TokenStream, input: TokenStream) -> TokenStream {
                             #(#all_param_names),*
                         }
                     }
+                }
 
-                    fn hey(){
-                      println!("hey")
+                impl Clone for #name {
+                    fn clone(&self) -> Self {
+                        #name {
+                            #(#all_param_names: self.#all_param_names.clone()),*
+                        }
                     }
                 }
             };
