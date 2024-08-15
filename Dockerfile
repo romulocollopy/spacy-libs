@@ -1,5 +1,5 @@
 ### DEV target
-FROM rust:slim-buster as dev
+FROM rust:slim-bullseye as dev
 
 ARG USER="runner"
 
